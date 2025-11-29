@@ -52,6 +52,26 @@ try {
     Write-Host "1) Open the service URL above and add environment variables: SMTP_USER and SMTP_PASS (and PORT if desired)."
     Write-Host "2) In GitHub, add repository secrets (Settings → Secrets) if you plan to use the GitHub Actions workflow:`RENDER_API_KEY` (your API key) and `RENDER_SERVICE_ID` (the Service ID printed above)."
     Write-Host "3) Push to the 'main' branch; the GitHub Actions workflow will trigger a Render deploy." 
+    
+    # Ask the user if they want to create environment variables now
+    $addEnv = Read-Host "Do you want to add environment variables to this service now? (y/N)"
+    if ($addEnv -and $addEnv.ToLower().StartsWith('y')) {
+        Write-Host "Enter key/value pairs. Leave key blank to finish." -ForegroundColor Cyan
+        while ($true) {
+            $key = Read-Host "Env var key (e.g. SMTP_USER)"
+            if (-not $key) { break }
+            $value = Read-Host "Env var value for $key (will be stored as plain text)"
+
+            $envBody = @{ key = $key; value = $value } | ConvertTo-Json
+            try {
+                $envResp = Invoke-RestMethod -Uri "https://api.render.com/v1/services/$($response.id)/env-vars" -Method Post -Headers $headers -Body $envBody -ErrorAction Stop
+                Write-Host "Added env var: $key" -ForegroundColor Green
+            } catch {
+                Write-Error "Failed to add env var $key: $($_.Exception.Message)"
+            }
+        }
+        Write-Host "Environment variable creation finished." -ForegroundColor Cyan
+    }
 } catch {
     Write-Error "Failed to create service: $($_.Exception.Message)"
     if ($_.ErrorDetails) { Write-Host $_.ErrorDetails.Message }
