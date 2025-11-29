@@ -57,3 +57,20 @@ node server.js
 Alternative automated deployment
 
 If you want to use Infrastructure as Code, the repository includes `render.yaml`. You can use Render's dashboard to import this YAML to create the service automatically.
+
+Automatic deploy from GitHub to Render (GitHub Actions)
+
+This repository includes a GitHub Actions workflow at `.github/workflows/deploy-to-render.yml` that triggers a Render deploy when you push to `main`.
+
+Before the workflow can trigger a deploy, add these repository secrets in GitHub (Settings → Secrets and variables → Actions):
+
+- `RENDER_API_KEY` — a Render API key with deploy permissions. Create one in Render under Account → API Keys.
+- `RENDER_SERVICE_ID` — the ID of the Render Web Service you created (Settings → General → Service ID in the Render dashboard).
+
+How it works:
+- The workflow calls `POST https://api.render.com/v1/services/{SERVICE_ID}/deploys` using your `RENDER_API_KEY`.
+- Render will then start a new deploy using the latest commit from the connected GitHub repository.
+
+Notes:
+- The Render service must already be created and connected to this repository for the workflow to trigger a deploy successfully. You can create the service manually in the Render dashboard and set it to use branch `main`.
+- If you prefer to deploy manually from the Render dashboard, you do not need to add these secrets.
