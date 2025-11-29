@@ -74,3 +74,18 @@ How it works:
 Notes:
 - The Render service must already be created and connected to this repository for the workflow to trigger a deploy successfully. You can create the service manually in the Render dashboard and set it to use branch `main`.
 - If you prefer to deploy manually from the Render dashboard, you do not need to add these secrets.
+
+Create Render service automatically (one-step script)
+
+If you prefer to create the Render Web Service automatically from your machine (instead of using the Render UI), there's a helper PowerShell script at `scripts/create_render_service.ps1` that uses the Render API.
+
+Usage:
+
+```powershell
+cd "path\to\GPublishing-Service"
+powershell -ExecutionPolicy Bypass -File .\scripts\create_render_service.ps1
+```
+
+The script will prompt for your `RENDER_API_KEY` and create a Web Service pointing to this repository. After creation it prints the `Service ID` which you can add as the GitHub secret `RENDER_SERVICE_ID`.
+
+Security note: keep your Render API key secret — add it to GitHub Secrets rather than pasting it into public places.
