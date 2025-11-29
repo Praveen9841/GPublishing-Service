@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: gpublishing-service
+    env: node
+    repo: https://github.com/Praveen9841/GPublishing-Service
+    branch: main
+    plan: free
+    buildCommand: ""
+    startCommand: "node server.js"
+    envVars:
+      - key: SMTP_USER
+      - key: SMTP_PASS
+      - key: PORT

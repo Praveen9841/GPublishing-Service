@@ -35,3 +35,25 @@ Notes
 ```powershell
 $env:PORT=3001; npm start
 ```
+
+Render (recommended for full functionality)
+
+1. Create a free account at https://render.com and connect your GitHub account.
+2. Create a new **Web Service** and select the `GPublishing-Service` repository and branch `main`.
+3. Set the **Environment** to `Node` and the **Start Command** to:
+
+```
+node server.js
+```
+
+4. Add environment variables in the Render dashboard (**Environment** → **Environment Variables**):
+
+- `SMTP_USER` = your SMTP email
+- `SMTP_PASS` = your SMTP password / app password
+- `PORT` = `3000` (Render provides its own port mapping; ensure the server reads `process.env.PORT`)
+
+5. Deploy. Render will build and provide a public URL where the full app (including contact/email features) will run.
+
+Alternative automated deployment
+
+If you want to use Infrastructure as Code, the repository includes `render.yaml`. You can use Render's dashboard to import this YAML to create the service automatically.
